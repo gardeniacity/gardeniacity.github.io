@@ -1,91 +1,10 @@
 <html lang="ar" dir="rtl">
-
 <head>
   <meta charset="UTF-8" dir="rtl">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>بحث الموقع (جاردنيا)</title>
-  <style>
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-
-    ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-
-    }
-
-    #suggestions li {
-      padding: 10px;
-    }
-
-    .right {
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-gap: 10px;
-    }
-
-    #mapsLink {
-      float: right;
-      font-size: 18;
-    }
-
-    #container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid #ccc;
-      padding: 5px;
-    }
-
-    #copy-box {
-      float: left;
-      display: flex;
-      align-items: center;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: #f0f0f0;
-      text-decoration-color: black;
-      cursor: pointer;
-    }
-
-    #copy-box:link {
-      text-decoration: none;
-    }
-
-    #copy-box:visited {
-      text-decoration: none;
-    }
-
-    #copy-box:hover {
-      text-decoration: none;
-    }
-
-    #copy-box:active {
-      text-decoration: none;
-    }
-
-    #copy-symbol {
-      margin-right: 10px;
-      font-size: 30;
-    }
-
-    #copy-text {
-      font-size: 16px;
-    }
-
-    .maps {
-      display: flex;
-      justify-content: right;
-      align-items: flex-start;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
-
 <body>
   <div class="right">
     <h1>البحث في عمارات جاردنيا</h1>
@@ -106,7 +25,8 @@
     <input type="number" id="search" placeholder="أدخل رقم العمارة..." oninput="filterData()">
 
     <ul id="suggestions"></ul>
-    <span>تقدر تستخدم الإحداثيات لسهولة الوصول لعمارتك في تطبيقات زي أوبر، انسخ الإحداثيات وابحث عنها في أوبر، هتظهرلك في أول نتيجة</span>
+    <span>تقدر تستخدم الإحداثيات لسهولة الوصول لعمارتك في تطبيقات زي أوبر، انسخ الإحداثيات وابحث عنها في أوبر، هتظهرلك
+      في أول نتيجة.</span>
   </div>
   <script src="data.js"></script>
   <script>
@@ -128,15 +48,13 @@
       // Display the filtered data in the suggestions list
       for (const item of filteredData) {
 
-        var link = `https://maps.google.com/?q=${item.loc}`;
-        var mapType = document.querySelector("input[type='radio'][name=map]:checked").value;
-        console.log(mapType);
-        if (mapType == 'Openstreetmap')
-          link = `https://www.openstreetmap.org/search?query=${item.loc}`;
         var resultItem =
-          `<div id="container"> 
-            <a id="mapsLink" href="${link}" target="_">عمارة ${item.no}</a>
-
+          `<div id="container">
+            <div>
+                <span id="mapsLink" onclick="gotoLocation('${item.loc}')">
+                <span>🏡</span>عمارة ${item.no}
+                </span>
+            </div>
             <spn id="copy-box" onclick="copyLocation('${item.loc}')">
               <span id="copy-text">نسخ الإحداثيات</span>
               <span id="copy-symbol">&#x2398;</span>
@@ -146,8 +64,16 @@
         suggestionLi.innerHTML = resultItem;
         suggestionsList.appendChild(suggestionLi);
       }
-
     }
+
+    function gotoLocation(loc) {
+      var url = `https://maps.google.com/?q=${loc}`;
+      var mapInterface = document.querySelector("input[type='radio'][name=map]:checked").value;
+      if (mapInterface == 'Openstreetmap')
+        url = `https://www.openstreetmap.org/search?query=${loc}`;
+      window.open(url, '_blank');
+    }
+
     function copyLocation(loc) {
       try {
         navigator.clipboard.writeText(loc);
