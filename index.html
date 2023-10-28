@@ -1,0 +1,162 @@
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" dir="rtl">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بحث الموقع (جاردنيا)</title>
+  <style>
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+
+    }
+
+    #suggestions li {
+      padding: 10px;
+    }
+
+    .right {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-gap: 10px;
+    }
+
+    #mapsLink {
+      float: right;
+      font-size: 18;
+    }
+
+    #container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #ccc;
+      padding: 5px;
+    }
+
+    #copy-box {
+      float: left;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f0f0f0;
+      text-decoration-color: black;
+      cursor: pointer;
+    }
+
+    #copy-box:link {
+      text-decoration: none;
+    }
+
+    #copy-box:visited {
+      text-decoration: none;
+    }
+
+    #copy-box:hover {
+      text-decoration: none;
+    }
+
+    #copy-box:active {
+      text-decoration: none;
+    }
+
+    #copy-symbol {
+      margin-right: 10px;
+      font-size: 30;
+    }
+
+    #copy-text {
+      font-size: 16px;
+    }
+
+    .maps {
+      display: flex;
+      justify-content: right;
+      align-items: flex-start;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="right">
+    <h1>البحث في عمارات جاردنيا</h1>
+    <fieldset class="maps">
+      <legend>فتح الموقع في:</legend>
+
+      <div>
+        <input type="radio" name="map" id="gm" value="Google Maps" checked />
+        <label for="gm">Google Maps</label>
+      </div>
+
+      <div>
+        <input type="radio" name="map" id="om" value="Openstreetmap" />
+        <label for="om">Openstreetmap</label>
+      </div>
+
+    </fieldset>
+    <input type="number" id="search" placeholder="أدخل رقم العمارة..." oninput="filterData()">
+
+    <ul id="suggestions"></ul>
+    <span>تقدر تستخدم الإحداثيات لسهولة الوصول لعمارتك في تطبيقات زي أوبر، انسخ الإحداثيات وابحث عنها في أوبر، هتظهرلك في أول نتيجة</span>
+  </div>
+  <script src="data.js"></script>
+  <script>
+
+    // Load the JSON data
+    const jsonData = buildings;
+
+    // Filter the JSON data based on the search term
+    function filterData() {
+      const searchTerm = document.getElementById('search').value.trim().toLowerCase();
+      const suggestionsList = document.getElementById('suggestions');
+      suggestionsList.innerHTML = '';
+      if (!searchTerm) {
+        return;
+      };
+      // Get a list of all the items in the JSON data that match the search term
+      const filteredData = jsonData.filter(item => item.no.toLowerCase().includes(searchTerm));
+
+      // Display the filtered data in the suggestions list
+      for (const item of filteredData) {
+
+        var link = `https://maps.google.com/?q=${item.loc}`;
+        var mapType = document.querySelector("input[type='radio'][name=map]:checked").value;
+        console.log(mapType);
+        if (mapType == 'Openstreetmap')
+          link = `https://www.openstreetmap.org/search?query=${item.loc}`;
+        var resultItem =
+          `<div id="container"> 
+            <a id="mapsLink" href="${link}" target="_">عمارة ${item.no}</a>
+
+            <spn id="copy-box" onclick="copyLocation('${item.loc}')">
+              <span id="copy-text">نسخ الإحداثيات</span>
+              <span id="copy-symbol">&#x2398;</span>
+            </span>
+          </div>`;
+        const suggestionLi = document.createElement('li');
+        suggestionLi.innerHTML = resultItem;
+        suggestionsList.appendChild(suggestionLi);
+      }
+
+    }
+    function copyLocation(loc) {
+      try {
+        navigator.clipboard.writeText(loc);
+        console.log('Location copied to clipboard');
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+      }
+    }
+  </script>
+</body>
+
+</html>
