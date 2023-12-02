@@ -30,10 +30,6 @@
   </div>
   <script src="data.js"></script>
   <script>
-
-    // Load the JSON data
-    const jsonData = buildings;
-
     // Filter the JSON data based on the search term
     function filterData() {
       const searchTerm = document.getElementById('search').value.trim().toLowerCase();
@@ -43,19 +39,19 @@
         return;
       };
       // Get a list of all the items in the JSON data that match the search term
-      const filteredData = jsonData.filter(item => item.no.toLowerCase().includes(searchTerm));
+      const filteredData = buildings.filter(item => item.no.toLowerCase().includes(searchTerm));
 
       // Display the filtered data in the suggestions list
-      for (const item of filteredData) {
+      for (const building of filteredData) {
 
         var resultItem =
           `<div id="container">
             <div>
-                <span id="mapsLink" onclick="gotoLocation('${item.loc}')">
-                <span>🏡</span>عمارة ${item.no}
+                <span id="mapsLink" onclick="gotoLocation('${building.loc}')">
+                <span>🏡</span>عمارة ${building.no}
                 </span>
             </div>
-            <spn id="copy-box" onclick="copyLocation('${item.loc}')">
+            <spn id="copy-box" onclick="copyLocation('${building.loc}')">
               <span id="copy-text">نسخ الإحداثيات</span>
               <span id="copy-symbol">&#x2398;</span>
             </span>
