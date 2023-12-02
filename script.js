@@ -6,8 +6,7 @@
       if (!searchTerm) {
         return;
       };
-      // Get a list of all the items in the JSON data that match the search term
-      const filteredData = buildings.filter(item => item.no.toLowerCase().includes(searchTerm));
+      const filteredData = buildings.filter(item => item.no==searchTerm);
 
       // Display the filtered data in the suggestions list
       for (const building of filteredData) {
